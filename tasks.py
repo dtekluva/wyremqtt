@@ -65,7 +65,7 @@ def run():
     client.loop_forever()
 
 def log_data(data):
-    with open("C:/Users/INYANG/Desktop/file.txt", "a") as file:
+    with open("file.txt", "a") as file:
         file.write(f"{data}\n\n")
     compile_for_wyre.delay(data)
 
