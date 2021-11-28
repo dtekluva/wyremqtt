@@ -104,7 +104,8 @@ def create_readings_table():
                                                         pf_import_at_maximum_kva_sliding_window_demand NUMERIC (30,15)
                                                         );
             """
-
+    connect_write(sql)
+    
 def write_to_readings_table(**kwargs):
     
     sql = f"""INSERT INTO readings (
