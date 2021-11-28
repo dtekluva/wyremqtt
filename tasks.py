@@ -4,7 +4,7 @@ from config import app
 
 from pathlib import WindowsPath
 import random
-import winsound
+# import winsound
 import requests
 import datetime
 import json
@@ -53,7 +53,7 @@ def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         log_data(msg.payload.decode())
-        winsound.Beep(2000, 100)
+        # winsound.Beep(2000, 100)
 
     client.subscribe(topic)
     client.on_message = on_message
