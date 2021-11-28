@@ -16,7 +16,8 @@ from database import db_manager
 from celery import Celery
 
 
-app = Celery('tasks', broker = 'amqps://shuzgizc:Cyn1AqSowjmaU3KWIhF_6heAERl-FHJN@fish.rmq.cloudamqp.com/shuzgizc', backend='db+postgresql://postgres:19sedimat54@localhost/postgres')
+# app = Celery('tasks', broker = 'amqps://shuzgizc:Cyn1AqSowjmaU3KWIhF_6heAERl-FHJN@fish.rmq.cloudamqp.com/shuzgizc', backend='db+postgresql://postgres:19sedimat54@localhost/postgres')
+app = Celery('tasks', broker = 'amqps://172.17.0.1:5672', backend='db+postgresql://postgres:19sedimat54@localhost/postgres')
 
 @app.task
 def reverse(text):
