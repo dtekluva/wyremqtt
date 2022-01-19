@@ -51,7 +51,7 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-        log_data(msg.payload.decode())
+        log_data(json.loads(msg.payload.decode()))
         # winsound.Beep(2000, 100)
 
     client.subscribe(topic)
@@ -64,14 +64,30 @@ def run():
     client.loop_forever()
 
 def log_data(data):
-    with open("file.txt", "a") as file:
-        file.write(f"{data}\n\n")
-    compile_for_wyre.delay(data)
+
+    if data.get("type") != "data":
+
+        with open("file.txt", "a") as file:
+            file.write(f"Irrelevant Data -> {data}\n\n")
+        print("IRRELEVANT --> ", data)
+
+    elif data.get("meterStatus") == "missing":
+
+        with open("file.txt", "a") as file:
+            file.write(f"Missing Device -> {data.get('meterSN')}\n\n")
+        print("PASSING --> ", data)
+
+    else:
+
+        with open("file.txt", "a") as file:
+            file.write(f"{data}\n\n")
+
+        compile_for_wyre(data)
 
 @app.task
 def compile_for_wyre(data):
     print("DATA : ", data)
-    data = json.loads(data.encode())
+    
     # data = {"type":"data","time":"20211124101800","gwSN":"12109132830001","meterSN":"12109132830004","meterName":"adl400","meterStatus":"normal","ch":0,"ua":221,"ub":220.9,"uc":220.9,"ia":random.randint(1,50),"ib":random.randint(1,50),"ic":random.randint(1,50),"pa":random.randint(1,50),"pb":random.randint(1,50),"pc":random.randint(1,50),"p":random.randint(1,50),"qa":random.randint(1,50),"qb":random.randint(1,50),"qc":random.randint(1,50),"q":random.randint(1,50),"pf":random.randint(1,50),"pt":1,"ct":40,"wh":8.98,"wl":0.6,"varh":5.21,"varl":5.43}
 
 
@@ -129,10 +145,29 @@ def compile_for_wyre(data):
                     "accum_kva_demand":0,
                     "pf_import_at_maximum_kva_sliding_window_demand":0
                 }
-
+                
+        datalogs_payload = {
+                              "total_kw": payload["total_kw"],
+                              "post_date": payload["post_date"],
+                              "post_time": payload["post_time"],
+                              "pulse_counter": 0.0,
+                              "post_datetime": payload["post_datetime"],
+                              "digital_input_1": 0.0,
+                              "digital_input_2": 0.0,
+                              "digital_input_3": 0.0,
+                              "digital_input_4": 0.0,
+                              "summary_energy_register_1": payload["kwh_import"],
+                              "summary_energy_register_2": payload["kwh_import"],
+                              "device_id": payload["device_id"] 
+                          }
+                          
+        print("RAW LOGS", datalogs_payload)
         db_manager.write_to_readings_table(**payload)
-        print(payload)
-        response = requests.post("https://wyreng.xyz/posts/reading/", json=payload)
-        print("RESPONSE : ", response.content)
+        # print(payload)
+        # response = requests.post("https://wyreng.xyz/posts/reading/", json=payload)
+        # print("RESPONSE : ", response.content)
+        # response = requests.post("https://wyreng.xyz/posts/datalog/", json=datalogs_payload)
+        # print("DATALOG RESPONSE : ", response.content)
+        
     except KeyError:
-        pass
+        print("error")
