@@ -164,10 +164,13 @@ def compile_for_wyre(data):
         print("RAW LOGS", datalogs_payload)
         db_manager.write_to_readings_table(**payload)
         # print(payload)
-        # response = requests.post("https://wyreng.xyz/posts/reading/", json=payload)
-        # print("RESPONSE : ", response.content)
-        # response = requests.post("https://wyreng.xyz/posts/datalog/", json=datalogs_payload)
-        # print("DATALOG RESPONSE : ", response.content)
+        if datalogs_payload["summary_energy_register_1"] == 0:
+            return dict()
+            
+        response = requests.post("https://wyreng.xyz/posts/reading/", json=payload)
+        print("RESPONSE : ", response.content)
+        response = requests.post("https://wyreng.xyz/posts/datalog/", json=datalogs_payload)
+        print("DATALOG RESPONSE : ", response.content)
         
     except KeyError:
         print("error")
