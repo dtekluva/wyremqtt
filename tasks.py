@@ -129,7 +129,7 @@ def repackage_for_adw300(data):
             "pf":find_params(data,25),
             "pt":find_params(data,34),
             "ct":find_params(data,35),
-            "wh":find_params(data,42),
+            "wh":find_params(data,28),
             "wl":0,
             "varh":find_params(data,44),
             "varl":47.28,
