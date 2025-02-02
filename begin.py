@@ -7,6 +7,7 @@
 import argparse
 from tasks import run as external_mqtt
 from tasksinternal import run as internal_mqtt
+from tasksawt200 import run as awt200mqtt
 
 def main():
     # Create an argument parser
@@ -21,6 +22,8 @@ def main():
     # Pass arguments to your task
     if args.path == "external":
         external_mqtt()
+    elif args.path == "awt200":
+        awt200mqtt()
     else:
         internal_mqtt()
 
