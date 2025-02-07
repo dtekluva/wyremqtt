@@ -153,6 +153,10 @@ def compile_for_wyre(data):
 
     device_id = data["meterSN"] if not (data.get("ch", "")) else data["meterSN"] + "-" + str(data.get("ch", "")) # Add meter channel to nmeter number if the meter has a channel.
 
+    if data["p"]*data.get("ct", 1) if data.get("ct", False) or not data.get("meterName", False) else data["p"]/1000 < 1:
+
+        return
+
     try:
         try:
             pf = data["pf"] or 1
