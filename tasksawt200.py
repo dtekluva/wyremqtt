@@ -158,14 +158,6 @@ def compile_for_wyre(data):
 
     #     return
     if data.get("state") == "OFFLINE":
-        print("############")
-        print("############")
-        print("##SKIPPING##")
-        print("##SKIPPING##")
-        print(data.get("state"))
-        print("##SKIPPING##")
-        print("############")
-        print("############")
         return
 
     try:
