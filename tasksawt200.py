@@ -108,6 +108,7 @@ def repackage_for_awt200(data):
     data = data.get("reported", None)[device_id]
     template = {
             "type":"data",
+            "state":data.get("state"),
             "time":"20250116100500",
             "gwSN":"00000000000",
             "meterSN":device_id.split("_")[1],
@@ -153,8 +154,18 @@ def compile_for_wyre(data):
 
     device_id = data["meterSN"] if not (data.get("ch", "")) else data["meterSN"] + "-" + str(data.get("ch", "")) # Add meter channel to nmeter number if the meter has a channel.
 
-    if data["p"]*data.get("ct", 1) if data.get("ct", False) or not data.get("meterName", False) else data["p"]/1000 < 1:
+    # if data["p"]*data.get("ct", 1) if data.get("ct", False) or not data.get("meterName", False) else data["p"]/1000 < 1:
 
+    #     return
+    if data.get("state") == "OFFLINE":
+        print("############")
+        print("############")
+        print("##SKIPPING##")
+        print("##SKIPPING##")
+        print(data.get("state"))
+        print("##SKIPPING##")
+        print("############")
+        print("############")
         return
 
     try:
