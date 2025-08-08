@@ -14,6 +14,7 @@ from paho.mqtt import client as mqtt_client
 from database import db_manager
 
 from celery import Celery
+from pprint import pprint
 
 
 app = Celery('tasks', broker = 'amqps://shuzgizc:Cyn1AqSowjmaU3KWIhF_6heAERl-FHJN@fish.rmq.cloudamqp.com/shuzgizc', backend='db+postgresql://postgres:19sedimat54@localhost/postgres')
@@ -109,9 +110,9 @@ def repackage_for_awt200(data):
     template = {
             "type":"data",
             "state":data.get("state"),
-            "time":"20250116100500",
+            "time":float(data.get("timestamp",0)),
             "gwSN":"00000000000",
-            "meterSN":device_id.split("_")[1],
+            "meterSN":device_id.split("_")[-1],
             "meterName":"AWT200",
             "meterStatus":"normal",
             "ch":0,
@@ -141,6 +142,8 @@ def repackage_for_awt200(data):
             "varl":47.28,
             "hz":float(data.get( "Fr",0))
             }
+
+    pprint(template)
     return template
 
 
@@ -149,6 +152,20 @@ def compile_for_wyre(data):
     print("DATA : ", data)
 
     # data = {"type":"data","time":"20211124101800","gwSN":"12109132830001","meterSN":"12109132830004","meterName":"adl400","meterStatus":"normal","ch":0,"ua":221,"ub":220.9,"uc":220.9,"ia":random.randint(1,50),"ib":random.randint(1,50),"ic":random.randint(1,50),"pa":random.randint(1,50),"pb":random.randint(1,50),"pc":random.randint(1,50),"p":random.randint(1,50),"qa":random.randint(1,50),"qb":random.randint(1,50),"qc":random.randint(1,50),"q":random.randint(1,50),"pf":random.randint(1,50),"pt":1,"ct":40,"wh":8.98,"wl":0.6,"varh":5.21,"varl":5.43}
+
+    if data.get("timestamp"):
+
+        timestamp = data.get("timestamp")
+        dt_object = datetime.datetime.fromtimestamp(timestamp)
+        timestamp = dt_object
+        print("TIMESTAMP::::::", timestamp)
+        print("TIMESTAMP::::::", timestamp)
+        print("TIMESTAMP::::::", timestamp)
+        print("TIMESTAMP::::::", timestamp)
+
+    else:
+        timestamp = datetime.datetime.now()
+
     if data.get("adw300") == True:
         data = repackage_for_awt200(data)
 
@@ -168,9 +185,9 @@ def compile_for_wyre(data):
 
         payload = {
             "device_id": device_id,
-            "post_datetime": str(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')),
-            "post_date": str(datetime.datetime.now().strftime('%Y-%m-%d')),
-            "post_time": str(datetime.datetime.now().strftime('%H:%M:%S')),
+            "post_datetime": str(timestamp.strftime('%Y-%m-%dT%H:%M:%S')),
+            "post_date": str(timestamp.strftime('%Y-%m-%d')),
+            "post_time": str(timestamp.strftime('%H:%M:%S')),
             "voltage_l1_l12":data["ua"],
             "voltage_l2_l23":data["ub"],
             "voltage_l3_l31":data["uc"],
