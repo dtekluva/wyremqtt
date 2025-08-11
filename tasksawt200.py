@@ -29,7 +29,7 @@ def reverse(text):
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "data/dev/NjczNzgxMjU5Mjk0OTMyOTky/#"
+topic = "data/dev/#"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'broker'
@@ -174,8 +174,8 @@ def compile_for_wyre(data):
     # if data["p"]*data.get("ct", 1) if data.get("ct", False) or not data.get("meterName", False) else data["p"]/1000 < 1:
 
     #     return
-    if data.get("state") == "OFFLINE":
-        return
+    # if data.get("state") == "OFFLINE":
+    #     return
 
     try:
         try:
