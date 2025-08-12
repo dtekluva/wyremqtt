@@ -175,7 +175,8 @@ def compile_for_wyre(data):
 
     else:
         timestamp = datetime.datetime.now()
-
+    timestamp = datetime.datetime.now()
+    
     if data.get("adw300") == True:
         data = repackage_for_awt200(data)
 
