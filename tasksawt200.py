@@ -29,7 +29,7 @@ def reverse(text):
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "data/dev/#"
+topic = "data/dev/NzAxMzEzNzM4NTU3ODE2ODMy/25062405300153"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'broker'
@@ -100,8 +100,17 @@ def log_data(data):
 
 def repackage_for_awt200(data):
 
+    # reported_key = data.get("reported", None)
+    # device_id = list(reported_key.keys())[0]
+    # device_actual_id = device_id.split("_")[-1]
+
     reported_key = data.get("reported", None)
-    device_id = list(reported_key.keys())[0]
+
+    if reported_key:
+        device_id = list(reported_key.keys())[0]
+        # Split on "_" and get the longest chunk
+        device_actual_id = max(device_id.split("_"), key=len)
+
 
     if reported_key is None:
         return {}
@@ -112,7 +121,7 @@ def repackage_for_awt200(data):
             "state":data.get("state"),
             "time":float(data.get("timestamp",0)),
             "gwSN":"00000000000",
-            "meterSN":device_id.split("_")[-1],
+            "meterSN":device_actual_id,
             "meterName":"AWT200",
             "meterStatus":"normal",
             "ch":0,
@@ -156,7 +165,8 @@ def compile_for_wyre(data):
     if data.get("timestamp"):
 
         timestamp = data.get("timestamp")
-        dt_object = datetime.datetime.fromtimestamp(timestamp)
+        china_tz = datetime.timezone(datetime.timedelta(hours=8))
+        dt_object = datetime.datetime.fromtimestamp(timestamp, tz=china_tz)
         timestamp = dt_object
         print("TIMESTAMP::::::", timestamp)
         print("TIMESTAMP::::::", timestamp)
@@ -253,7 +263,7 @@ def compile_for_wyre(data):
                           }
 
         print("RAW LOGS", datalogs_payload)
-        db_manager.write_to_readings_table(**payload)
+        # db_manager.write_to_readings_table(**payload)
         print("DEVICE ID ####################", device_id)
         # print(payload)
         if True: # datalogs_payload["summary_energy_register_1"] == 0:
