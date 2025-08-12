@@ -29,7 +29,7 @@ def reverse(text):
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "data/dev/NzAxMzEzNzM4NTU3ODE2ODMy/25062405300153"
+topic = "data/dev/#"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'broker'
@@ -176,7 +176,7 @@ def compile_for_wyre(data):
     else:
         timestamp = datetime.datetime.now()
     timestamp = datetime.datetime.now()
-    
+
     if data.get("adw300") == True:
         data = repackage_for_awt200(data)
 
