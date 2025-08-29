@@ -188,6 +188,14 @@ def compile_for_wyre(data):
     # if data.get("state") == "OFFLINE":
     #     return
 
+    if data.get("state") == "OFFLINE":
+        print("DEVICE IS OFFLINE ...!!!")
+        print("DEVICE IS OFFLINE ...!!!")
+        print("DEVICE IS OFFLINE ...!!!")
+        print("DEVICE IS OFFLINE ...!!!")
+        print("DEVICE IS OFFLINE ...!!!")
+        return;
+
     try:
         try:
             pf = data["pf"] or 1
